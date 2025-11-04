@@ -13,7 +13,7 @@ public final class RequestSpecFactory {
         String baseurl=ServiceRegistry.getBaseUrl(serviceNameNormalized);
 
 
-        String token=System.getenv("GOREST_AUTH");
+        String token=System.getenv("GOREST_TOKEN");
 
         if (token == null || token.isBlank()){
             String serviceToken=serviceNameNormalized+".token";
