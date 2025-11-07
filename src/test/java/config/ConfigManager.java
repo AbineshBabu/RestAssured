@@ -11,13 +11,13 @@ public final class ConfigManager {
 
     static {
         // 1) read env from JVM system property or OS env var
-        String sysEnv = System.getProperty("env");             // -Denv=qa
+        String sysEnv = System.getProperty("env");             // -Denv=qa or -Denv=dev
 
         if (sysEnv == null || sysEnv.isBlank()) {
             sysEnv = System.getenv("TEST_ENV");          // TEST_ENV=qa
         }
         if (sysEnv == null || sysEnv.isBlank()) {
-            sysEnv = "acc";                                    // default
+            sysEnv = "qa";                                    // default
         }
 
         ENV = sysEnv.toLowerCase();

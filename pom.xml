@@ -16,6 +16,8 @@
     <restassured.version>5.5.0</restassured.version>
     <lombok.version>1.18.34</lombok.version>
     <surefire.version>3.2.5</surefire.version>
+    <parallel.mode>classes</parallel.mode>
+    <parallel.threads>4</parallel.threads>
   </properties>
 
   <!-- Allure BOM to manage Allure versions -->
@@ -106,6 +108,13 @@
       <artifactId>allure-cucumber7-jvm</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <version>${restassured.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -117,9 +126,19 @@
         <version>${surefire.version}</version>
         <configuration>
           <useModulePath>false</useModulePath>
+
+          <parallel>${parallel.mode}</parallel>
+          <threadCount>${parallel.threads}</threadCount>
+          <perCoreThreadCount>false</perCoreThreadCount>
+
+          <includes>
+            <include>**/*Runner.java</include>
+          </includes>
+
           <systemPropertyVariables>
-            <!-- Force Allure results into target/allure-results -->
-            <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+            <allure.results.directory>
+              ${project.build.directory}/allure-results
+            </allure.results.directory>
           </systemPropertyVariables>
         </configuration>
       </plugin>
