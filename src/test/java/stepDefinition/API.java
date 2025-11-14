@@ -50,9 +50,9 @@ public class API {
         assertBodyContains(testContext.getResponse(), responseValue);
     }
 
-    @And("user send request to {string} with path parameter as {int}")
-    public void user_send_request_to_with_path_parameter_as(String endpoint, int id) {
-        Response response = userClient().getUserById(id);
+    @And("user send a get request to {string} with the created userid as path parameter")
+    public void user_send_request_to_with_the_created_userid_as_path_parameter(String endpoint) {
+        Response response = userClient().getUserById(testContext.getUserId());
         testContext.setResponse(response);
     }
 
@@ -68,6 +68,7 @@ public class API {
         Response response= userClient().CreateUser(requestuser);
         testContext.setResponse(response);
         responseuser=response.as(Createuser.class);
+        testContext.setUserId(responseuser.getId());
     }
 
 
@@ -81,11 +82,11 @@ public class API {
         assertEquals(requestuser.getEmail() ,responseuser.getEmail());
     }
 
-    @And("user send put request to {string} endpoint for {int}")
-    public void user_send_put_request_to_endpoint_for(String endpoint, int id) {
+    @And("user send put request to {string} with the created userid as path parameter")
+    public void user_send_put_request_to_with_the_created_userid_as_path_parameter(String endpoint) {
 
         requestuser = TestDataFactory.randomUser();
-        Response response= userClient().updateUser(requestuser,id);
+        Response response= userClient().updateUser(requestuser, testContext.getUserId());
         testContext.setResponse(response);
 
         responseuser=response.as(Createuser.class);
@@ -104,10 +105,10 @@ public class API {
     }
 
 
-    @And("user send patch request to {string} endpoint for {int} to patch {string}")
-    public void user_send_patch_request_to_endpoint_for_to_patch(String endpoint, int id, String patchField) {
+    @And("user send patch request to {string} with the created userid as path parameter to patch {string}")
+    public void user_send_patch_request_to_with_the_created_userid_as_path_parameter_to_patch(String endpoint, String patchField) {
         requestuser=TestDataFactory.patchField(patchField);
-        Response response= userClient().patchUser(requestuser,id);
+        Response response= userClient().patchUser(requestuser, testContext.getUserId());
         testContext.setResponse(response);
         responseuser=response.as(Createuser.class);
     }
@@ -134,9 +135,9 @@ public class API {
 
     }
 
-    @And("user send delete request to {string} endpoint for {int}")
-    public void user_send_delete_request_to_endpoint_for(String endpoint, int id) {
-        Response response= userClient().deleteUser(id);
+    @And("user send delete request to {string} with the created userid as path parameter")
+    public void user_send_delete_request_to_endpoint_for(String endpoint) {
+        Response response= userClient().deleteUser(testContext.getUserId());
         testContext.setResponse(response);
     }
 

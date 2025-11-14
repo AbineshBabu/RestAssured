@@ -13,6 +13,10 @@ jobs:
   smoke-tests-qa:
     runs-on: ubuntu-latest
 
+    # put secrets here so both test steps get them
+    env:
+      GOREST_TOKEN: ${{ secrets.GOREST_TOKEN_QA }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,11 +28,15 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Run Smoke tests (QA)
-        run: mvn -B test -Dtest=runner.SmokeRunner -Denv=qa
-        env:
-          # token is taken from repo secret
-          GOREST_TOKEN: ${{ secrets.GOREST_TOKEN_QA }}
+      # Push / PR → disable parallel
+      - name: Run Smoke tests (push/PR - sequential)
+        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+        run: mvn test -Denv=qa -Dparallel.mode=none
+
+      # Scheduled run → 4 threads
+      - name: Run Smoke tests (scheduled - 2 threads)
+        if: ${{ github.event_name == 'schedule' }}
+        run: mvn test -Denv=qa -Dparallel.threads=4
 
       - name: Generate Allure report
         run: mvn -B allure:report
