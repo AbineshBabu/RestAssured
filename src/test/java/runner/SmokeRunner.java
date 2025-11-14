@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
                 "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
         },
         monochrome = true,
-        tags = "@P2 and not @P1"
+        tags = "@P2"
 )
 public class SmokeRunner {
 }
